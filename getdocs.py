@@ -1,10 +1,12 @@
 from bs4 import BeautifulSoup
 
+from functlib import imdbify
+
 import requests, json, re, time
 
 page = 1
 
-imdb_ts = []
+imdb_urls = []
 
 while page <= 1:
 
@@ -22,10 +24,9 @@ while page <= 1:
 
 		the_link = a_link.find('a')
 		
-		imdb_ts.append(the_link['href'])
-		
-		time.sleep(1)
+		imdb_urls.append(imdbify(the_link['href']))
 
 	page = page + 1
-print(imdb_ts)
-# json.dump(imdb_ts,open('t_numbs.json','w'),indent=2)
+	time.sleep(1)
+
+json.dump(imdb_urls,open('imdb_urls.json','w'),indent=2)

@@ -29,7 +29,6 @@ def numberResults(start, end):
 
 	url = 'https://www.imdb.com/search/title?title_type=documentary&release_date=' + str(start) + ',' + str(end) + '&countries=us&adult=include&sort=release_date,asc&count=250&start=' + str(1)
 
-	print('Checking range from ' + str(start) + ' to ' + str(end))
 	results_page = requests.get(url)
 
 	page_html = results_page.text

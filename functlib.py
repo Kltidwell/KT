@@ -22,14 +22,14 @@ def castPage(tt):
 	
 	return tt
 	
-def numberResults(startDate, testEnd):
+def numberResults(start, end):
 	from bs4 import BeautifulSoup
 
 	import requests, re
 
-	url = 'https://www.imdb.com/search/title?title_type=documentary&release_date=' + str(startDate) + ',' + str(testEnd) + '&countries=us&adult=include&sort=release_date,asc&count=250&start=' + str(1)
+	url = 'https://www.imdb.com/search/title?title_type=documentary&release_date=' + str(start) + ',' + str(end) + '&countries=us&adult=include&sort=release_date,asc&count=250&start=' + str(1)
 
-	print('Checking range from ' + str(startDate) + ' to ' + str(testEnd))
+	print('Checking range from ' + str(start) + ' to ' + str(end))
 	results_page = requests.get(url)
 
 	page_html = results_page.text
@@ -39,7 +39,7 @@ def numberResults(startDate, testEnd):
 	#Find number of search results-------------------------------
 	desc = soup.find('div', attrs={'class' : 'desc'})
 
-	expr = re.compile( 'of (.+?) titles' )
+	expr = re.compile( '([^a-z]+?) title' )
 
 	strResults = expr.findall(str(desc))
 
@@ -47,6 +47,7 @@ def numberResults(startDate, testEnd):
 	for aResults in strResults:
 		
 		global numResults
-		numResults = int(aResults.replace( ',' , '' ))
+		numResults = aResults.replace( ',' , '' )
+		numResults = numResults.replace('>','')
 		
-	return numResults
+	return int(numResults)

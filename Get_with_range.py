@@ -25,40 +25,32 @@ while startDate <= endDate:
 	while numberResults(startDate, testEnd) >= 500:
 		testEnd = (testEnd-startDate)/2 + startDate
 		print('Adjusting Range')
-		time.sleep(1)
+		time.sleep(5)
 					
 	while nextButton is not None:
 		url = 'https://www.imdb.com/search/title?title_type=documentary&release_date=' + str(startDate) + ',' + str(testEnd) + '&countries=us&adult=include&sort=release_date,asc&count=250&start=' + str(page)
 			
-		for results_page in range(10):
+		results_page = requests.get(url)
+
+		page_html = results_page.text
+				
+
+		soup = BeautifulSoup(page_html, 'html.parser')
 			
-			try: 
-				results_page = requests.get(url)
-
-				page_html = results_page.text
-				
-				break
-				
-			except TimeoutError:
-				print(TimeoutError)
-				pass				
-
-			print('Scraping : from ' + str(startDate) + ' to ' + str(testEnd))
-
-			soup = BeautifulSoup(page_html, 'html.parser')
-				
-			all_tts = soup.find_all('img', attrs={'class' : 'loadlate'})
+		all_tts = soup.find_all('img', attrs={'class' : 'loadlate'})
+		
+		print('Scraping : from ' + str(startDate) + ' to ' + str(testEnd))
+		
+		for a_tt in all_tts:
 			
-			for a_tt in all_tts:
+			imdb_tts.append(a_tt['data-tconst'])
+			
+			count = count + 1
 				
-				imdb_tts.append(a_tt['data-tconst'])
-				
-				count = count + 1
-				
-			page = page + 250
-							
-			nextButton = soup.find('a', attrs={'class' : 'lister-page-next next-page'})
-			time.sleep(1)	
+		page = page + 250
+						
+		nextButton = soup.find('a', attrs={'class' : 'lister-page-next next-page'})
+		time.sleep(10)	
 
 	time.sleep(1)	
 	startDate = testEnd + timedelta(days = 1)

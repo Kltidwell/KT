@@ -6,7 +6,7 @@ from functlib import imdbify, numberResults
 
 startDate = date(1878, 1, 1)
 
-endDate = date(1880, 12, 31)
+endDate = date(2017, 12, 31)
 
 imdb_tts = []
 
@@ -39,13 +39,12 @@ while nextButton is not None:
 	
 	nextButton = soup.find('a', attrs={'class' : 'lister-page-next next-page'})
 	
-	if nextButton is not None:
+	# if nextButton is not None:
 		
-		next_page = nextButton['href']
-			
-		url = imdbify(next_page)
-		time.sleep(1)
+	next_page = nextButton['href']
 		
+	url = imdbify(next_page)
+	
 	time.sleep(1)	
 	
 	print(str(count) + ' out of ' + str(numResults))
